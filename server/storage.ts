@@ -146,38 +146,19 @@ export class MemStorage implements IStorage {
     };
     this.lessons.set(designLesson1.id, designLesson1);
 
-    // Create default user
+    // Create default user (fresh start for new users)
     const defaultUser: User = {
       id: this.currentUserId++,
       username: "demo",
       password: "demo",
-      xp: 1247,
-      streak: 7,
+      xp: 0,
+      streak: 0,
       hearts: 5,
       lastActiveDate: new Date().toISOString().split('T')[0]
     };
     this.users.set(defaultUser.id, defaultUser);
 
-    // Add some progress for demo user
-    const progress1: UserProgress = {
-      id: this.currentProgressId++,
-      userId: defaultUser.id,
-      courseId: financeCourse.id,
-      lessonId: financeLesson1.id,
-      completed: true,
-      xpEarned: 15
-    };
-    this.userProgress.set(`${defaultUser.id}-${financeLesson1.id}`, progress1);
-
-    const progress2: UserProgress = {
-      id: this.currentProgressId++,
-      userId: defaultUser.id,
-      courseId: financeCourse.id,
-      lessonId: financeLesson2.id,
-      completed: true,
-      xpEarned: 15
-    };
-    this.userProgress.set(`${defaultUser.id}-${financeLesson2.id}`, progress2);
+    // No pre-completed lessons for new users - they start fresh!
   }
 
   async getUser(id: number): Promise<User | undefined> {
@@ -276,7 +257,14 @@ export class MemStorage implements IStorage {
 
   async createProgress(progress: InsertUserProgress): Promise<UserProgress> {
     const id = this.currentProgressId++;
-    const newProgress: UserProgress = { ...progress, id };
+    const newProgress: UserProgress = { 
+      id,
+      userId: progress.userId,
+      courseId: progress.courseId,
+      lessonId: progress.lessonId,
+      completed: progress.completed ?? false,
+      xpEarned: progress.xpEarned ?? 0
+    };
     this.userProgress.set(`${progress.userId}-${progress.lessonId}`, newProgress);
     return newProgress;
   }
