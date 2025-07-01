@@ -110,7 +110,8 @@ This is a modern web application that mimics the Duolingo language learning expe
 - PostgreSQL session storage for production scalability
 
 ## Changelog
-- July 01, 2025. Initial setup
+- July 01, 2025. Initial setup with complete Duolingo-style learning platform
+- July 01, 2025. Migrated from in-memory storage to PostgreSQL database with Drizzle ORM
 
 ## User Preferences
 
