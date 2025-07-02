@@ -1,6 +1,6 @@
 import { createServer } from "http";
-import { storage } from "./storage";
-import { insertUserProgressSchema } from "@shared/schema";
+import { storage } from "./storage.js";
+import { insertUserProgressSchema } from "../shared/schema.js";
 
 export async function registerRoutes(app) {
   // Get current user (demo user for now)

@@ -1,41 +1,11 @@
 import { 
-  users, courses, lessons, userProgress,
-  type User, type InsertUser, 
-  type Course, type InsertCourse,
-  type Lesson, type InsertLesson,
-  type UserProgress, type InsertUserProgress
+  users, courses, lessons, userProgress
 } from "@shared/schema";
 import { db } from "./db";
 import { eq, and } from "drizzle-orm";
 
-export interface IStorage {
-  // User methods
-  getUser(id: number): Promise<User | undefined>;
-  getUserByUsername(username: string): Promise<User | undefined>;
-  createUser(user: InsertUser): Promise<User>;
-  updateUserXP(userId: number, xp: number): Promise<User | undefined>;
-  updateUserStreak(userId: number, streak: number): Promise<User | undefined>;
-  updateUserHearts(userId: number, hearts: number): Promise<User | undefined>;
-  
-  // Course methods
-  getAllCourses(): Promise<Course[]>;
-  getCourse(id: number): Promise<Course | undefined>;
-  createCourse(course: InsertCourse): Promise<Course>;
-  
-  // Lesson methods
-  getLessonsByCourse(courseId: number): Promise<Lesson[]>;
-  getLesson(id: number): Promise<Lesson | undefined>;
-  createLesson(lesson: InsertLesson): Promise<Lesson>;
-  
-  // Progress methods
-  getUserProgress(userId: number): Promise<UserProgress[]>;
-  getCourseProgress(userId: number, courseId: number): Promise<UserProgress[]>;
-  createProgress(progress: InsertUserProgress): Promise<UserProgress>;
-  updateProgress(userId: number, lessonId: number, completed: boolean, xpEarned: number): Promise<UserProgress | undefined>;
-}
-
-export class DatabaseStorage implements IStorage {
-  async getUser(id: number): Promise<User | undefined> {
+export class DatabaseStorage {
+  async getUser(id) {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }

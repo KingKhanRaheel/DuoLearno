@@ -112,7 +112,9 @@ This is a modern web application that mimics the Duolingo language learning expe
 ## Changelog
 - July 01, 2025. Initial setup with complete Duolingo-style learning platform
 - July 01, 2025. Migrated from in-memory storage to PostgreSQL database with Drizzle ORM
+- July 01, 2025. User requested JavaScript preference - simplified TypeScript code to be more JavaScript-like
 
 ## User Preferences
 
 Preferred communication style: Simple, everyday language.
+Code preference: JavaScript-style code with minimal TypeScript type annotations.
