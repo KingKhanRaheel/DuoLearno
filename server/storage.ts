@@ -1,7 +1,9 @@
 import { 
-  users, courses, lessons, userProgress
-} from "@shared/schema";
-import { db } from "./db";
+  users, courses, lessons, userProgress,
+  type User, type InsertUser, type Course, type InsertCourse, 
+  type Lesson, type InsertLesson, type UserProgress, type InsertUserProgress
+} from "../shared/schema.js";
+import { db } from "./db.js";
 import { eq, and } from "drizzle-orm";
 
 export class DatabaseStorage {

@@ -1,8 +1,9 @@
 import { createServer } from "http";
-import { storage } from "./storage";
-import { insertUserProgressSchema } from "@shared/schema";
+import { storage } from "./storage.js";
+import { insertUserProgressSchema } from "../shared/schema.js";
+import type { Express, Request, Response } from "express";
 
-export async function registerRoutes(app) {
+export async function registerRoutes(app: Express) {
   // Get current user (demo user for now)
   app.get("/api/user", async (req, res) => {
     try {
