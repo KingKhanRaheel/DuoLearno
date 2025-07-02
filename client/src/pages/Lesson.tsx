@@ -51,16 +51,17 @@ export default function Lesson() {
       updateHearts.mutate(newHearts);
     }
 
-    setQuestionsAnswered(prev => prev + 1);
+    const newQuestionsAnswered = questionsAnswered + 1;
+    setQuestionsAnswered(newQuestionsAnswered);
 
-    if (questionsAnswered + 1 >= totalQuestions) {
+    if (newQuestionsAnswered >= totalQuestions) {
       setTimeout(() => {
         setShowContinue(true);
-      }, 1000);
+      }, 1500);
     } else {
       setTimeout(() => {
         setCurrentQuestionIndex(prev => prev + 1);
-      }, 2000);
+      }, 1500);
     }
   };
 

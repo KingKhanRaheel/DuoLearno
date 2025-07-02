@@ -129,11 +129,11 @@ export class LocalStorage {
     return JSON.parse(localStorage.getItem('learningApp_user') || '{}');
   }
 
-  updateUser(updates) {
+  async updateUser(updates) {
     const user = this.getUser();
     const updatedUser = { ...user, ...updates };
     localStorage.setItem('learningApp_user', JSON.stringify(updatedUser));
-    return updatedUser;
+    return Promise.resolve(updatedUser);
   }
 
   // Course methods
@@ -172,7 +172,7 @@ export class LocalStorage {
     });
   }
 
-  updateProgress(lessonId, completed, xpEarned) {
+  async updateProgress(lessonId, completed, xpEarned) {
     const progress = this.getUserProgress();
     const existingIndex = progress.findIndex(p => p.lessonId === lessonId);
     
@@ -202,7 +202,7 @@ export class LocalStorage {
       });
     }
 
-    return progressEntry;
+    return Promise.resolve(progressEntry);
   }
 }
 

@@ -27,8 +27,9 @@ export function useCompleteLesson() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: ({ lessonId, xpEarned }) =>
-      storage.updateProgress(lessonId, true, xpEarned || 10),
+    mutationFn: async ({ lessonId, xpEarned }) => {
+      return await storage.updateProgress(lessonId, true, xpEarned || 10);
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
       queryClient.invalidateQueries({ queryKey: ["user", "progress"] });
@@ -41,8 +42,9 @@ export function useUpdateHearts() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: (hearts) =>
-      storage.updateUser({ hearts }),
+    mutationFn: async (hearts) => {
+      return await storage.updateUser({ hearts });
+    },
     onSuccess: () => {
       queryClient.invalidateQueries({ queryKey: ["user"] });
     }

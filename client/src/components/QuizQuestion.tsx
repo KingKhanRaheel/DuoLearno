@@ -1,4 +1,4 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import type { QuizQuestion } from "@/lib/types";
@@ -12,6 +12,13 @@ export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) 
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [answered, setAnswered] = useState(false);
+
+  // Reset state when question changes
+  useEffect(() => {
+    setSelectedAnswer(null);
+    setShowFeedback(false);
+    setAnswered(false);
+  }, [question]);
 
   const handleOptionClick = (optionIndex: number) => {
     if (answered) return;
