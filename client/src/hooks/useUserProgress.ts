@@ -1,23 +1,25 @@
 import { useQuery, useMutation, useQueryClient } from "@tanstack/react-query";
-import { apiRequest } from "@/lib/queryClient";
-import type { User, UserProgress } from "@shared/schema";
+import { storage } from "@/lib/storage";
 
 export function useUser() {
-  return useQuery<User>({
-    queryKey: ["/api/user"],
+  return useQuery({
+    queryKey: ["user"],
+    queryFn: () => storage.getUser()
   });
 }
 
 export function useUserProgress() {
-  return useQuery<UserProgress[]>({
-    queryKey: ["/api/user/progress"],
+  return useQuery({
+    queryKey: ["user", "progress"],
+    queryFn: () => storage.getUserProgress()
   });
 }
 
-export function useCourseProgress(courseId: number) {
-  return useQuery<UserProgress[]>({
-    queryKey: ["/api/user/progress", courseId],
-    enabled: courseId > 0,
+export function useCourseProgress(courseId) {
+  return useQuery({
+    queryKey: ["course", courseId, "progress"],
+    queryFn: () => storage.getCourseProgress(courseId),
+    enabled: courseId > 0
   });
 }
 
@@ -25,14 +27,13 @@ export function useCompleteLesson() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async ({ lessonId, xpEarned }: { lessonId: number; xpEarned?: number }) => {
-      const res = await apiRequest("POST", `/api/lessons/${lessonId}/complete`, { xpEarned });
-      return res.json();
-    },
+    mutationFn: ({ lessonId, xpEarned }) =>
+      storage.updateProgress(lessonId, true, xpEarned || 10),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
-      queryClient.invalidateQueries({ queryKey: ["/api/user/progress"] });
-    },
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+      queryClient.invalidateQueries({ queryKey: ["user", "progress"] });
+      queryClient.invalidateQueries({ queryKey: ["course"] });
+    }
   });
 }
 
@@ -40,12 +41,10 @@ export function useUpdateHearts() {
   const queryClient = useQueryClient();
   
   return useMutation({
-    mutationFn: async (hearts: number) => {
-      const res = await apiRequest("PATCH", "/api/user/hearts", { hearts });
-      return res.json();
-    },
+    mutationFn: (hearts) =>
+      storage.updateUser({ hearts }),
     onSuccess: () => {
-      queryClient.invalidateQueries({ queryKey: ["/api/user"] });
-    },
+      queryClient.invalidateQueries({ queryKey: ["user"] });
+    }
   });
 }

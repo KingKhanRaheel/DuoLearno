@@ -8,7 +8,7 @@ import ProgressBar from "@/components/ProgressBar";
 import QuizQuestion from "@/components/QuizQuestion";
 import XPModal from "@/components/XPModal";
 import { useCompleteLesson, useUpdateHearts, useUser } from "@/hooks/useUserProgress";
-import type { Lesson } from "@shared/schema";
+import { storage } from "@/lib/storage";
 import type { QuizQuestion as QuizQuestionType } from "@/lib/types";
 
 export default function Lesson() {
@@ -22,8 +22,9 @@ export default function Lesson() {
   const [showXPModal, setShowXPModal] = useState(false);
   const [earnedXP, setEarnedXP] = useState(0);
 
-  const { data: lesson } = useQuery<Lesson>({
-    queryKey: [`/api/lessons/${lessonId}`],
+  const { data: lesson } = useQuery({
+    queryKey: ["lesson", lessonId],
+    queryFn: () => storage.getLesson(lessonId),
     enabled: lessonId > 0,
   });
 

@@ -3,23 +3,33 @@ import { useLocation } from "wouter";
 import Header from "@/components/Header";
 import CourseCard from "@/components/CourseCard";
 import { useUserProgress } from "@/hooks/useUserProgress";
-import type { Course } from "@shared/schema";
+import { storage } from "@/lib/storage";
 import type { CourseWithProgress } from "@/lib/types";
 
 export default function Home() {
   const [, navigate] = useLocation();
-  const { data: courses = [] } = useQuery<Course[]>({
-    queryKey: ["/api/courses"],
+  const { data: courses = [] } = useQuery({
+    queryKey: ["courses"],
+    queryFn: () => storage.getAllCourses()
   });
   const { data: userProgress = [] } = useUserProgress();
 
   const coursesWithProgress: CourseWithProgress[] = courses.map(course => {
-    const courseProgress = userProgress.filter(p => p.courseId === course.id && p.completed);
+    // Get lessons for this course to calculate total
+    const courseLessons = storage.getLessonsByCourse(course.id);
+    const totalLessons = courseLessons.length;
+    
+    // Calculate completed lessons from progress
+    const courseProgress = userProgress.filter(p => {
+      const lesson = storage.getLesson(p.lessonId);
+      return lesson && lesson.courseId === course.id && p.completed;
+    });
     const completedLessons = courseProgress.length;
-    const progress = course.totalLessons > 0 ? (completedLessons / course.totalLessons) * 100 : 0;
+    const progress = totalLessons > 0 ? (completedLessons / totalLessons) * 100 : 0;
 
     return {
       ...course,
+      totalLessons,
       completedLessons,
       progress
     };

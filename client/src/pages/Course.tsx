@@ -4,20 +4,22 @@ import { ArrowLeft } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useCourseProgress } from "@/hooks/useUserProgress";
-import type { Course, Lesson } from "@shared/schema";
+import { storage } from "@/lib/storage";
 
 export default function Course() {
   const params = useParams();
   const [, navigate] = useLocation();
   const courseId = parseInt(params.id || "0");
 
-  const { data: course } = useQuery<Course>({
-    queryKey: [`/api/courses/${courseId}`],
+  const { data: course } = useQuery({
+    queryKey: ["course", courseId],
+    queryFn: () => storage.getCourse(courseId),
     enabled: courseId > 0,
   });
 
-  const { data: lessons = [] } = useQuery<Lesson[]>({
-    queryKey: [`/api/courses/${courseId}/lessons`],
+  const { data: lessons = [] } = useQuery({
+    queryKey: ["course", courseId, "lessons"],
+    queryFn: () => storage.getLessonsByCourse(courseId),
     enabled: courseId > 0,
   });
 
