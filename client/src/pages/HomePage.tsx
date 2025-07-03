@@ -16,7 +16,7 @@ export default function HomePage() {
             Interactive learning platform that makes education fun and engaging. Learn at your own pace with gamified lessons.
           </p>
           <Link href="/courses">
-            <Button className="bg-purple-primary hover:bg-purple-primary/90 text-white px-8 py-4 text-lg rounded-full">
+            <Button className="bg-purple-primary hover:bg-purple-primary/90 text-white px-10 py-5 text-xl rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl font-semibold">
               Start Learning
             </Button>
           </Link>
@@ -120,7 +120,7 @@ export default function HomePage() {
                 Join thousands of learners who are already improving their skills with Duolearno.
               </p>
               <Link href="/courses">
-                <Button className="bg-gradient-to-r from-purple-primary to-teal-primary hover:opacity-90 text-white px-8 py-4 text-lg rounded-full">
+                <Button className="bg-gradient-to-r from-purple-primary to-teal-primary hover:opacity-90 text-white px-10 py-5 text-xl rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl font-semibold">
                   Explore Courses
                 </Button>
               </Link>

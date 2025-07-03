@@ -46,66 +46,68 @@ export default function Courses() {
             const isStarted = completedLessons > 0;
 
             return (
-              <Card key={course.id} className="glassmorphism border-none hover:shadow-lg transition-all duration-300 hover:scale-105">
-                <CardHeader className="text-center">
-                  <div className="text-4xl mb-3">{course.icon}</div>
-                  <CardTitle className="text-xl font-bold">{course.title}</CardTitle>
-                  <CardDescription className="text-sm text-gray-600 dark:text-gray-400">
-                    {course.description}
-                  </CardDescription>
-                </CardHeader>
-                
-                <CardContent className="space-y-4">
-                  {/* Progress Bar */}
-                  <div>
-                    <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-2">
-                      <span>Progress</span>
-                      <span>{completedLessons}/{course.totalLessons} lessons</span>
+              <Link key={course.id} href={`/course/${course.id}`}>
+                <Card className="glassmorphism border-none hover:shadow-xl transition-all duration-300 hover:scale-105 cursor-pointer active:scale-95 h-full">
+                  <CardHeader className="text-center pb-4">
+                    <div className="text-5xl mb-4">{course.icon}</div>
+                    <CardTitle className="text-xl font-bold mb-2">{course.title}</CardTitle>
+                    <CardDescription className="text-sm text-gray-600 dark:text-gray-400 leading-relaxed">
+                      {course.description}
+                    </CardDescription>
+                  </CardHeader>
+                  
+                  <CardContent className="space-y-4">
+                    {/* Progress Bar */}
+                    <div>
+                      <div className="flex justify-between text-sm text-gray-600 dark:text-gray-400 mb-3">
+                        <span className="font-medium">Progress</span>
+                        <span className="font-semibold">{completedLessons}/{course.totalLessons} lessons</span>
+                      </div>
+                      <Progress value={progress} className="h-3 bg-gray-200" />
                     </div>
-                    <Progress value={progress} className="h-2" />
-                  </div>
 
-                  {/* Course Stats */}
-                  <div className="flex items-center justify-between text-sm">
-                    <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                      <Clock size={16} />
-                      <span>{course.totalLessons} lessons</span>
+                    {/* Course Stats */}
+                    <div className="flex items-center justify-between text-sm bg-gray-50 dark:bg-gray-700 rounded-lg p-3">
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                        <Clock size={18} />
+                        <span className="font-medium">{course.totalLessons} lessons</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-600 dark:text-gray-400">
+                        <Trophy size={18} />
+                        <span className="font-medium">{completedLessons * 10} XP</span>
+                      </div>
                     </div>
-                    <div className="flex items-center gap-1 text-gray-600 dark:text-gray-400">
-                      <Trophy size={16} />
-                      <span>{completedLessons * 10} XP</span>
+
+                    {/* Status Badge and Button */}
+                    <div className="space-y-3">
+                      <div className="flex justify-center">
+                        {progress === 100 ? (
+                          <Badge className="bg-success-green text-white px-4 py-1 text-sm">
+                            ✓ Completed
+                          </Badge>
+                        ) : isStarted ? (
+                          <Badge className="bg-warning-orange text-white px-4 py-1 text-sm">
+                            📚 In Progress
+                          </Badge>
+                        ) : (
+                          <Badge variant="outline" className="px-4 py-1 text-sm">
+                            🚀 Ready to Start
+                          </Badge>
+                        )}
+                      </div>
+
+                      {/* Action Button */}
+                      <Button 
+                        className="w-full bg-gradient-to-r from-purple-primary to-teal-primary hover:opacity-90 text-white rounded-xl py-3 text-base font-semibold transition-all duration-200 active:scale-95"
+                        size="lg"
+                      >
+                        <Play size={18} className="mr-2" />
+                        {isStarted ? 'Continue Learning' : 'Start Course'}
+                      </Button>
                     </div>
-                  </div>
-
-                  {/* Status Badge */}
-                  <div className="flex justify-center">
-                    {progress === 100 ? (
-                      <Badge className="bg-success-green text-white">
-                        Completed
-                      </Badge>
-                    ) : isStarted ? (
-                      <Badge className="bg-warning-orange text-white">
-                        In Progress
-                      </Badge>
-                    ) : (
-                      <Badge variant="outline">
-                        Not Started
-                      </Badge>
-                    )}
-                  </div>
-
-                  {/* Action Button */}
-                  <Link href={`/course/${course.id}`}>
-                    <Button 
-                      className="w-full bg-gradient-to-r from-purple-primary to-teal-primary hover:opacity-90 text-white rounded-full"
-                      size="lg"
-                    >
-                      <Play size={16} className="mr-2" />
-                      {isStarted ? 'Continue' : 'Start Course'}
-                    </Button>
-                  </Link>
-                </CardContent>
-              </Card>
+                  </CardContent>
+                </Card>
+              </Link>
             );
           })}
         </div>

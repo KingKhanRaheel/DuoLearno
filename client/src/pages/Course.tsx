@@ -66,41 +66,50 @@ export default function Course() {
               const isUnlocked = index === 0 || progress.some(p => p.lessonId === lessons[index - 1]?.id && p.completed);
 
               return (
-                <div
+                <button
                   key={lesson.id}
-                  className={`bg-white rounded-2xl p-6 shadow-sm border border-gray-100 ${
-                    isUnlocked ? "hover:shadow-md transition-all duration-200" : "opacity-50"
+                  onClick={() => isUnlocked && startLesson(lesson.id)}
+                  disabled={!isUnlocked}
+                  className={`w-full text-left bg-white rounded-2xl p-6 shadow-sm border border-gray-100 transition-all duration-200 ${
+                    isUnlocked 
+                      ? "hover:shadow-xl hover:scale-102 cursor-pointer active:scale-95" 
+                      : "opacity-50 cursor-not-allowed"
                   }`}
                 >
                   <div className="flex items-center justify-between">
                     <div className="flex-1">
-                      <h3 className="text-lg font-semibold text-gray-800 mb-1">
+                      <h3 className="text-lg font-semibold text-gray-800 mb-2">
                         Lesson {index + 1}: {lesson.title}
                       </h3>
-                      <p className="text-sm neutral-gray">
-                        {isCompleted ? "Completed" : isUnlocked ? "Ready to start" : "Locked"}
-                      </p>
+                      <div className="flex items-center gap-3">
+                        <p className="text-sm text-gray-600">
+                          {isCompleted ? "✅ Completed" : isUnlocked ? "🚀 Ready to start" : "🔒 Locked"}
+                        </p>
+                        {isCompleted && (
+                          <span className="text-xs bg-success-green text-white px-2 py-1 rounded-full">
+                            +10 XP
+                          </span>
+                        )}
+                      </div>
                     </div>
                     <div className="flex items-center space-x-3">
                       {isCompleted && (
-                        <div className="w-8 h-8 bg-duolingo-green rounded-full flex items-center justify-center">
-                          <i className="fas fa-check text-white text-sm"></i>
+                        <div className="w-10 h-10 bg-success-green rounded-full flex items-center justify-center">
+                          <span className="text-white text-lg">✓</span>
                         </div>
                       )}
-                      <Button
-                        onClick={() => startLesson(lesson.id)}
-                        disabled={!isUnlocked}
-                        className={`px-6 py-2 rounded-xl font-bold text-sm transition-all duration-200 ${
-                          isCompleted
+                      <div className={`px-6 py-3 rounded-xl font-semibold text-base transition-all duration-200 ${
+                        !isUnlocked
+                          ? "bg-gray-200 text-gray-400"
+                          : isCompleted
                             ? "bg-gray-200 text-gray-600 hover:bg-gray-300"
-                            : "bg-duolingo-green text-white hover:opacity-90"
-                        }`}
-                      >
-                        {isCompleted ? "Review" : "Start"}
-                      </Button>
+                            : "bg-purple-primary text-white hover:bg-purple-primary/90"
+                      }`}>
+                        {isCompleted ? "Review" : isUnlocked ? "Start" : "Locked"}
+                      </div>
                     </div>
                   </div>
-                </div>
+                </button>
               );
             })}
           </div>

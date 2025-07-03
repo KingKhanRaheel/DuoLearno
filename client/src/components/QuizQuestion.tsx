@@ -43,36 +43,35 @@ export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) 
       <p className="font-semibold text-gray-800 mb-4">{question.question}</p>
       <div className="space-y-3">
         {question.options.map((option, index) => {
-          let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ";
+          let buttonClass = "w-full text-left p-5 rounded-xl border-2 transition-all duration-200 cursor-pointer active:scale-95 ";
           
           if (!answered) {
-            buttonClass += "border-gray-200 hover:border-purple-primary hover:bg-purple-primary/10";
+            buttonClass += "border-gray-300 hover:border-purple-primary hover:bg-purple-primary/10 hover:shadow-md";
           } else if (index === question.correct) {
-            buttonClass += "border-success-green bg-success-green/10";
+            buttonClass += "border-success-green bg-success-green/10 shadow-md";
           } else if (index === selectedAnswer && index !== question.correct) {
-            buttonClass += "border-error-red bg-error-red/10";
+            buttonClass += "border-error-red bg-error-red/10 shadow-md";
           } else {
             buttonClass += "border-gray-200 opacity-50";
           }
 
           return (
-            <Button
+            <button
               key={index}
-              variant="ghost"
               className={buttonClass}
               onClick={() => handleOptionClick(index)}
               disabled={answered}
             >
               <div className="flex items-center justify-between w-full">
-                <span className="font-medium">{option}</span>
+                <span className="font-semibold text-base">{option}</span>
                 {answered && index === question.correct && (
-                  <Check className="w-5 h-5 duolingo-green" />
+                  <Check className="w-6 h-6 text-success-green" />
                 )}
                 {answered && index === selectedAnswer && index !== question.correct && (
-                  <X className="w-5 h-5 error-red" />
+                  <X className="w-6 h-6 text-error-red" />
                 )}
               </div>
-            </Button>
+            </button>
           );
         })}
       </div>
