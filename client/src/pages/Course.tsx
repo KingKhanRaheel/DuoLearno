@@ -5,6 +5,7 @@ import { Button } from "@/components/ui/button";
 import Header from "@/components/Header";
 import { useCourseProgress } from "@/hooks/useUserProgress";
 import { storage } from "@/lib/storage";
+import ChapterProgress from "@/components/ChapterProgress";
 
 export default function Course() {
   const params = useParams();
@@ -33,34 +34,75 @@ export default function Course() {
     navigate(`/lesson/${lessonId}`);
   };
 
+  // Group lessons by chapters for Personal Finance 101
+  const getChapters = () => {
+    if (courseId !== 1) return null; // Only for Personal Finance 101
+    
+    const chapters = [
+      {
+        title: "Chapter 1: Understanding Money",
+        lessonRange: [0, 3] // lessons 1-4
+      },
+      {
+        title: "Chapter 2: Budgeting Like a Boss", 
+        lessonRange: [4, 7] // lessons 5-8
+      },
+      {
+        title: "Chapter 3: Smart Saving Habits",
+        lessonRange: [8, 11] // lessons 9-12
+      },
+      {
+        title: "Chapter 4: Intro to Investing",
+        lessonRange: [12, 16] // lessons 13-17
+      },
+      {
+        title: "Chapter 5: Spending Wisely & Financial Hygiene",
+        lessonRange: [17, 20] // lessons 18-21
+      }
+    ];
+
+    return chapters.map(chapter => ({
+      title: chapter.title,
+      lessons: lessons
+        .filter((_, index) => index >= chapter.lessonRange[0] && index <= chapter.lessonRange[1])
+        .map(lesson => ({
+          ...lesson,
+          completed: progress.some(p => p.lessonId === lesson.id && p.completed)
+        }))
+    }));
+  };
+
   if (!course) {
     return <div>Loading...</div>;
   }
 
-  return (
-    <div className="min-h-screen bg-[var(--bg-light)]">
-      <Header />
-      
-      <main className="max-w-md mx-auto px-4 py-6">
-        <div className="space-y-6">
-          {/* Course Header */}
-          <div className="flex items-center space-x-4 mb-6">
-            <Button
-              variant="ghost"
-              size="sm"
-              onClick={goBack}
-              className="text-gray-600 hover:text-gray-800 transition-colors p-2"
-            >
-              <ArrowLeft className="w-5 h-5" />
-            </Button>
-            <div>
-              <h1 className="text-xl font-bold text-gray-800">{course.title}</h1>
-              <p className="text-sm neutral-gray">{lessons.length} lessons</p>
-            </div>
-          </div>
+  const chapters = getChapters();
 
-          {/* Lessons List */}
-          <div className="space-y-4">
+  return (
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 pb-20">
+      <div className="container mx-auto px-4 py-8">
+        {/* Course Header */}
+        <div className="flex items-center space-x-4 mb-8">
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={goBack}
+            className="text-gray-600 hover:text-purple-primary transition-colors p-3 rounded-full hover:bg-purple-primary/10"
+          >
+            <ArrowLeft className="w-6 h-6" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold text-gray-800 dark:text-gray-100 mb-2">{course.title}</h1>
+            <p className="text-gray-600 dark:text-gray-400">{course.description}</p>
+            <p className="text-sm text-purple-primary font-semibold mt-1">{lessons.length} lessons • Master your money step by step</p>
+          </div>
+        </div>
+
+        {/* Chapter Progress for Personal Finance 101 */}
+        {chapters && <ChapterProgress chapters={chapters} />}
+
+        {/* Lessons List */}
+        <div className="space-y-4">
             {lessons.map((lesson, index) => {
               const isCompleted = progress.some(p => p.lessonId === lesson.id && p.completed);
               const isUnlocked = index === 0 || progress.some(p => p.lessonId === lessons[index - 1]?.id && p.completed);
@@ -114,7 +156,6 @@ export default function Course() {
             })}
           </div>
         </div>
-      </main>
-    </div>
-  );
+      </div>
+    );
 }
