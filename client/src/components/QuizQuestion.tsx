@@ -2,6 +2,7 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Check, X } from "lucide-react";
 import type { QuizQuestion } from "@/lib/types";
+import { soundManager } from "@/lib/sound";
 
 interface QuizQuestionProps {
   question: QuizQuestion;
@@ -29,6 +30,9 @@ export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) 
     
     const isCorrect = optionIndex === question.correct;
     
+    // Play sound effect
+    soundManager.play(isCorrect ? 'correct' : 'incorrect');
+    
     setTimeout(() => {
       onAnswer(isCorrect);
     }, 1500);
@@ -42,11 +46,11 @@ export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) 
           let buttonClass = "w-full text-left p-4 rounded-xl border-2 transition-all duration-200 ";
           
           if (!answered) {
-            buttonClass += "border-gray-200 hover:border-[var(--duolingo-green)] hover:bg-green-50";
+            buttonClass += "border-gray-200 hover:border-purple-primary hover:bg-purple-primary/10";
           } else if (index === question.correct) {
-            buttonClass += "border-[var(--duolingo-green)] bg-green-50";
+            buttonClass += "border-success-green bg-success-green/10";
           } else if (index === selectedAnswer && index !== question.correct) {
-            buttonClass += "border-[var(--error-red)] bg-red-50";
+            buttonClass += "border-error-red bg-error-red/10";
           } else {
             buttonClass += "border-gray-200 opacity-50";
           }

@@ -2,6 +2,7 @@ import { useEffect, useState } from "react";
 import { motion, AnimatePresence } from "framer-motion";
 import { Button } from "@/components/ui/button";
 import { Trophy } from "lucide-react";
+import { soundManager } from "@/lib/sound";
 
 interface XPModalProps {
   isOpen: boolean;
@@ -15,6 +16,8 @@ export default function XPModal({ isOpen, xpEarned, totalXP, onClose }: XPModalP
 
   useEffect(() => {
     if (isOpen) {
+      // Play XP sound
+      soundManager.play('xp');
       setShowConfetti(true);
       const timer = setTimeout(() => {
         setShowConfetti(false);
@@ -24,7 +27,7 @@ export default function XPModal({ isOpen, xpEarned, totalXP, onClose }: XPModalP
   }, [isOpen]);
 
   const createConfetti = () => {
-    const colors = ['var(--duolingo-green)', 'var(--duolingo-blue)', 'var(--warning-orange)', 'var(--error-red)', 'var(--success-green)'];
+    const colors = ['var(--purple-primary)', 'var(--teal-primary)', 'var(--warning-orange)', 'var(--error-red)', 'var(--success-green)'];
     const pieces = [];
     
     for (let i = 0; i < 50; i++) {

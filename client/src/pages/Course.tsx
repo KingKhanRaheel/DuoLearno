@@ -25,8 +25,8 @@ export default function Course() {
 
   const { data: progress = [] } = useCourseProgress(courseId);
 
-  const goHome = () => {
-    navigate("/");
+  const goBack = () => {
+    navigate("/courses");
   };
 
   const startLesson = (lessonId: number) => {
@@ -48,7 +48,7 @@ export default function Course() {
             <Button
               variant="ghost"
               size="sm"
-              onClick={goHome}
+              onClick={goBack}
               className="text-gray-600 hover:text-gray-800 transition-colors p-2"
             >
               <ArrowLeft className="w-5 h-5" />

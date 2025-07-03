@@ -1,0 +1,101 @@
+Hey, let's work on the next set of upgrades for Duolearno.
+
+Here’s what I need you to do:
+
+✅ 1. Add LocalStorage for Progress Tracking
+
+Track and store the user’s:
+
+Total XP
+
+Daily streak count
+
+Last completed lesson ID
+
+Last activity date
+
+All data should persist across refreshes.
+
+If the user leaves and returns the next day and completes a lesson, streak increases by 1.
+
+If more than 24 hours have passed since the last activity, reset the streak to 0.
+
+✅ 2. Build a Basic Daily Streak System
+
+Add a simple visual streak tracker — something like:
+
+“🔥 Streak: 3 days” at the top of the screen
+
+Auto-update it based on LocalStorage data and activity timestamps
+
+✅ 3. Add a Homepage with Course Cards
+
+Create a /home or root route with 2–3 dummy course cards:
+
+“Personal Finance 101”
+
+“Design Basics”
+
+“Mental Health 101”
+
+Each card should include:
+
+Course title
+
+One-line description
+
+“Start” button (only the first one needs to work)
+
+Make it look like a real course selection screen, even if most links are placeholders for now
+
+✅ 4. Detach UI From Duolingo's Look
+
+Move away from Duolingo-style colors (avoid green, rounded bubbles, and same font)
+
+Use a new theme — maybe teal, purple, or something playful but clean
+
+Try a minimal, neumorphic or glassmorphic style if it’s easy to implement
+
+Swap the font to something like Poppins or Inter using Google Fonts
+
+✅ 5. Add Sound Effects
+
+Add short SFX for:
+
+Correct answer
+
+Wrong answer
+
+Earning XP
+
+Use royalty-free .mp3 files stored locally (or link to CDN if easier)
+
+Include a mute/unmute toggle somewhere (top-right corner or settings icon)
+
+✅ 6. Light UI Polish
+
+Add a floating XP counter and streak tracker on every screen
+
+Maybe add a small avatar/profile icon (even static is fine) with tooltip showing:
+
+“XP: 130 | Streak: 2 days”
+
+✅ 7. Add Multi-Tab Navigation to the App
+
+Introduce a tabbed navigation system with at least three main tabs:
+
+Home — A welcome page briefly explaining what the app is about and how to get started
+
+Courses — The page with available course cards and lessons
+
+Profile — A dashboard showing the user’s:
+
+Ongoing courses
+
+Total XP
+
+Progress bar(s)
+
+Streak info
+
+Ensure the tab bar is always visible and mobile-friendly. Keep the navigation intuitive and light-weight.

@@ -3,6 +3,22 @@ export class LocalStorage {
   // Initialize with sample data if not exists
   constructor() {
     this.initializeData();
+    this.checkAndUpdateStreak();
+  }
+
+  private checkAndUpdateStreak() {
+    const user = this.getUser();
+    if (!user.lastActivityDate) return;
+
+    const now = new Date();
+    const lastActivity = new Date(user.lastActivityDate);
+    const timeDiff = now.getTime() - lastActivity.getTime();
+    const daysDiff = Math.floor(timeDiff / (1000 * 3600 * 24));
+
+    // If more than 24 hours have passed, reset streak
+    if (daysDiff > 1) {
+      this.updateUser({ streak: 0 });
+    }
   }
 
   initializeData() {
@@ -113,7 +129,9 @@ export class LocalStorage {
         xp: 0,
         streak: 0,
         hearts: 5,
-        lastActive: new Date().toISOString()
+        lastActive: new Date().toISOString(),
+        lastActivityDate: null,
+        lastCompletedLessonId: null
       };
 
       localStorage.setItem('learningApp_courses', JSON.stringify(courses));
@@ -193,12 +211,36 @@ export class LocalStorage {
 
     localStorage.setItem('learningApp_progress', JSON.stringify(progress));
 
-    // Update user XP if lesson completed
+    // Update user XP and streak if lesson completed
     if (completed && xpEarned > 0) {
       const user = this.getUser();
+      const now = new Date();
+      const today = now.toDateString();
+      
+      // Check if this is a new day of activity
+      const lastActivityDate = user.lastActivityDate ? new Date(user.lastActivityDate).toDateString() : null;
+      let newStreak = user.streak;
+      
+      if (lastActivityDate !== today) {
+        // If last activity was yesterday, increment streak
+        if (lastActivityDate) {
+          const yesterday = new Date(now.getTime() - 24 * 60 * 60 * 1000).toDateString();
+          if (lastActivityDate === yesterday) {
+            newStreak += 1;
+          } else {
+            newStreak = 1; // Reset streak if gap is more than 1 day
+          }
+        } else {
+          newStreak = 1; // First activity
+        }
+      }
+      
       this.updateUser({ 
         xp: user.xp + xpEarned,
-        lastActive: new Date().toISOString()
+        streak: newStreak,
+        lastActive: new Date().toISOString(),
+        lastActivityDate: now.toISOString(),
+        lastCompletedLessonId: lessonId
       });
     }
 
