@@ -1,9 +1,15 @@
 import { Button } from '../components/ui/button';
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '../components/ui/card';
-import { BookOpen, Brain, Trophy, Zap } from 'lucide-react';
+import { BookOpen, Brain, Trophy, Zap, RefreshCw } from 'lucide-react';
 import { Link } from 'wouter';
+import { storage } from '../lib/storage';
 
 export default function HomePage() {
+  const handleRefreshCourses = () => {
+    storage.forceReload();
+    window.location.reload();
+  };
+
   return (
     <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 pb-20">
       <div className="container mx-auto px-4 py-8">
@@ -15,11 +21,21 @@ export default function HomePage() {
           <p className="text-xl text-gray-600 dark:text-gray-300 mb-8 max-w-2xl mx-auto">
             Interactive learning platform that makes education fun and engaging. Learn at your own pace with gamified lessons.
           </p>
-          <Link href="/courses">
-            <Button className="bg-purple-primary hover:bg-purple-primary/90 text-white px-10 py-5 text-xl rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl font-semibold">
-              Start Learning
+          <div className="flex flex-col sm:flex-row gap-4 items-center justify-center">
+            <Link href="/courses">
+              <Button className="bg-purple-primary hover:bg-purple-primary/90 text-white px-10 py-5 text-xl rounded-full transition-all duration-200 active:scale-95 shadow-lg hover:shadow-xl font-semibold">
+                Start Learning
+              </Button>
+            </Link>
+            <Button 
+              onClick={handleRefreshCourses}
+              variant="outline" 
+              className="px-6 py-3 text-purple-primary border-purple-primary hover:bg-purple-primary hover:text-white rounded-full transition-all duration-200 active:scale-95 font-semibold flex items-center gap-2"
+            >
+              <RefreshCw className="w-5 h-5" />
+              Refresh Courses
             </Button>
-          </Link>
+          </div>
         </div>
 
         {/* Features Section */}

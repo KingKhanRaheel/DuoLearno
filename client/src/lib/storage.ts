@@ -6,6 +6,13 @@ export class LocalStorage {
     this.checkAndUpdateStreak();
   }
 
+  // Force reload data for updates
+  forceReload() {
+    localStorage.removeItem('learningApp_initialized');
+    localStorage.removeItem('learningApp_version');
+    this.initializeData();
+  }
+
   private checkAndUpdateStreak() {
     const user = this.getUser();
     if (!user.lastActivityDate) return;
@@ -22,7 +29,9 @@ export class LocalStorage {
   }
 
   initializeData() {
-    if (!localStorage.getItem('learningApp_initialized')) {
+    // Force reload of new curriculum data
+    const currentVersion = localStorage.getItem('learningApp_version');
+    if (!localStorage.getItem('learningApp_initialized') || currentVersion !== '2.0') {
       // Sample courses
       const courses = [
         {
@@ -427,6 +436,7 @@ export class LocalStorage {
       localStorage.setItem('learningApp_user', JSON.stringify(user));
       localStorage.setItem('learningApp_progress', JSON.stringify([]));
       localStorage.setItem('learningApp_initialized', 'true');
+      localStorage.setItem('learningApp_version', '2.0');
     }
   }
 
