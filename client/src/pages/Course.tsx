@@ -115,7 +115,7 @@ export default function Course() {
   const chapters = getChapters();
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800 pb-20">
+    <div className="min-h-screen bg-gradient-to-br from-purple-50 to-teal-50 dark:from-gray-900 dark:to-gray-800">
       <motion.div 
         initial={{ opacity: 0 }}
         animate={{ opacity: 1 }}

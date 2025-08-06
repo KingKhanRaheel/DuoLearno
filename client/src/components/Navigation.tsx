@@ -18,50 +18,58 @@ export default function Navigation() {
     return false;
   };
 
+  // Hide sidebar on lesson pages for better UX
+  if (location.includes('/lesson/')) {
+    return null;
+  }
+
   return (
-    <div className="fixed bottom-0 left-0 right-0 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 z-50">
-      <div className="flex justify-around items-center py-3 px-2">
+    <>
+      <style>{`:root { --sidebar-width: 80px; }`}</style>
+      <div className="fixed left-0 top-0 h-full w-20 bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 z-40 shadow-lg">
+      <div className="flex flex-col items-center py-6 space-y-6">
         <Link href="/">
-          <button className={`flex flex-col items-center px-4 py-3 rounded-xl transition-all duration-200 min-w-[70px] cursor-pointer active:scale-95 ${
+          <button className={`flex flex-col items-center p-4 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 ${
             isActive('/') 
               ? 'text-purple-primary bg-purple-primary/10 shadow-sm' 
               : 'text-gray-500 hover:text-purple-primary hover:bg-purple-primary/5 dark:text-gray-400 dark:hover:text-purple-primary'
           }`}>
-            <Home size={28} />
+            <Home size={24} />
             <span className="text-xs mt-1 font-medium">Home</span>
           </button>
         </Link>
         
         <Link href="/courses">
-          <button className={`flex flex-col items-center px-4 py-3 rounded-xl transition-all duration-200 min-w-[70px] cursor-pointer active:scale-95 ${
+          <button className={`flex flex-col items-center p-4 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 ${
             isActive('/courses') 
               ? 'text-purple-primary bg-purple-primary/10 shadow-sm' 
               : 'text-gray-500 hover:text-purple-primary hover:bg-purple-primary/5 dark:text-gray-400 dark:hover:text-purple-primary'
           }`}>
-            <BookOpen size={28} />
+            <BookOpen size={24} />
             <span className="text-xs mt-1 font-medium">Courses</span>
           </button>
         </Link>
         
         <Link href="/profile">
-          <button className={`flex flex-col items-center px-4 py-3 rounded-xl transition-all duration-200 min-w-[70px] cursor-pointer active:scale-95 ${
+          <button className={`flex flex-col items-center p-4 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 ${
             isActive('/profile') 
               ? 'text-purple-primary bg-purple-primary/10 shadow-sm' 
               : 'text-gray-500 hover:text-purple-primary hover:bg-purple-primary/5 dark:text-gray-400 dark:hover:text-purple-primary'
           }`}>
-            <User size={28} />
+            <User size={24} />
             <span className="text-xs mt-1 font-medium">Profile</span>
           </button>
         </Link>
         
         <button
           onClick={toggleSound}
-          className="flex flex-col items-center px-4 py-3 rounded-xl transition-all duration-200 min-w-[70px] cursor-pointer active:scale-95 text-gray-500 hover:text-purple-primary hover:bg-purple-primary/5 dark:text-gray-400 dark:hover:text-purple-primary"
+          className="flex flex-col items-center p-4 rounded-xl transition-all duration-200 cursor-pointer active:scale-95 text-gray-500 hover:text-purple-primary hover:bg-purple-primary/5 dark:text-gray-400 dark:hover:text-purple-primary"
         >
-          {isMuted ? <VolumeX size={28} /> : <Volume2 size={28} />}
+          {isMuted ? <VolumeX size={24} /> : <Volume2 size={24} />}
           <span className="text-xs mt-1 font-medium">Sound</span>
         </button>
       </div>
-    </div>
+      </div>
+    </>
   );
 }

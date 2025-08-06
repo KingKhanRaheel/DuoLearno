@@ -14,17 +14,19 @@ import FloatingStats from "@/components/FloatingStats";
 
 function Router() {
   return (
-    <div className="relative">
-      <FloatingStats />
-      <Switch>
-        <Route path="/" component={Home} />
-        <Route path="/courses" component={Courses} />
-        <Route path="/profile" component={Profile} />
-        <Route path="/course/:id" component={Course} />
-        <Route path="/lesson/:id" component={Lesson} />
-        <Route component={NotFound} />
-      </Switch>
+    <div className="relative flex">
       <Navigation />
+      <div className="flex-1" style={{ marginLeft: 'var(--sidebar-width, 0px)' }}>
+        <FloatingStats />
+        <Switch>
+          <Route path="/" component={Home} />
+          <Route path="/courses" component={Courses} />
+          <Route path="/profile" component={Profile} />
+          <Route path="/course/:id" component={Course} />
+          <Route path="/lesson/:id" component={Lesson} />
+          <Route component={NotFound} />
+        </Switch>
+      </div>
     </div>
   );
 }
