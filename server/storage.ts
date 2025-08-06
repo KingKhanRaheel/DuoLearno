@@ -6,8 +6,28 @@ import {
 import { db } from "./db.js";
 import { eq, and } from "drizzle-orm";
 
-export class DatabaseStorage {
-  async getUser(id) {
+// Storage interface for type safety
+export interface IStorage {
+  getUser(id: number): Promise<User | undefined>;
+  getUserByUsername(username: string): Promise<User | undefined>;
+  createUser(insertUser: InsertUser): Promise<User>;
+  updateUserXP(userId: number, xp: number): Promise<User | undefined>;
+  updateUserStreak(userId: number, streak: number): Promise<User | undefined>;
+  updateUserHearts(userId: number, hearts: number): Promise<User | undefined>;
+  getAllCourses(): Promise<Course[]>;
+  getCourse(id: number): Promise<Course | undefined>;
+  createCourse(course: InsertCourse): Promise<Course>;
+  getLessonsByCourse(courseId: number): Promise<Lesson[]>;
+  getLesson(id: number): Promise<Lesson | undefined>;
+  createLesson(lesson: InsertLesson): Promise<Lesson>;
+  getUserProgress(userId: number): Promise<UserProgress[]>;
+  getCourseProgress(userId: number, courseId: number): Promise<UserProgress[]>;
+  createProgress(progress: InsertUserProgress): Promise<UserProgress>;
+  updateProgress(userId: number, lessonId: number, completed: boolean, xpEarned: number): Promise<UserProgress | undefined>;
+}
+
+export class DatabaseStorage implements IStorage {
+  async getUser(id: number) {
     const [user] = await db.select().from(users).where(eq(users.id, id));
     return user || undefined;
   }

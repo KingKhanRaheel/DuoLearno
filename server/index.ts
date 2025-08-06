@@ -33,7 +33,7 @@ async function startServer() {
   }
 
   // Error handling
-  app.use((err, _req, res, _next) => {
+  app.use((err: any, _req: any, res: any, _next: any) => {
     const status = err.status || err.statusCode || 500;
     const message = err.message || "Internal Server Error";
 
@@ -44,7 +44,7 @@ async function startServer() {
     });
   });
 
-  const PORT = process.env.PORT || 5000;
+  const PORT = parseInt(process.env.PORT || "5000");
   server.listen(PORT, "0.0.0.0", () => {
     log(`serving on port ${PORT}`);
   });
