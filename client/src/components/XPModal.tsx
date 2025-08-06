@@ -19,12 +19,22 @@ export default function XPModal({ isOpen, xpEarned, totalXP, onClose }: XPModalP
       // Play XP sound
       soundManager.play('xp');
       setShowConfetti(true);
-      const timer = setTimeout(() => {
+      
+      const confettiTimer = setTimeout(() => {
         setShowConfetti(false);
       }, 1000);
-      return () => clearTimeout(timer);
+      
+      // Auto close modal after 3 seconds
+      const closeTimer = setTimeout(() => {
+        onClose();
+      }, 3000);
+      
+      return () => {
+        clearTimeout(confettiTimer);
+        clearTimeout(closeTimer);
+      };
     }
-  }, [isOpen]);
+  }, [isOpen, onClose]);
 
   const createConfetti = () => {
     const colors = ['var(--purple-primary)', 'var(--teal-primary)', 'var(--warning-orange)', 'var(--error-red)', 'var(--success-green)'];
