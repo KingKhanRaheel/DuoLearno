@@ -55,13 +55,15 @@ export default function Lesson() {
     setQuestionsAnswered(newQuestionsAnswered);
 
     if (newQuestionsAnswered >= totalQuestions) {
+      // All questions completed, show complete lesson button
       setTimeout(() => {
         setShowContinue(true);
-      }, 1500);
+      }, 2000);
     } else {
+      // Move to next question
       setTimeout(() => {
         setCurrentQuestionIndex(prev => prev + 1);
-      }, 1500);
+      }, 2000);
     }
   };
 
