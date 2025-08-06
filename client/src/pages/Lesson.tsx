@@ -51,22 +51,27 @@ export default function Lesson() {
     if (!isCorrect && user) {
       // Lose a heart for wrong answer
       const newHearts = Math.max(0, user.hearts - 1);
-      updateHearts.mutate(newHearts);
+      updateHearts.mutate({ hearts: newHearts });
     }
+  };
 
+  const handleQuizContinue = async () => {
     const newQuestionsAnswered = questionsAnswered + 1;
     setQuestionsAnswered(newQuestionsAnswered);
 
     if (newQuestionsAnswered >= totalQuestions) {
-      // All questions completed, show complete lesson button
-      setTimeout(() => {
-        setShowContinue(true);
-      }, 2000);
+      // All questions completed, mark lesson as complete and go to next lesson
+      const xp = 15;
+      setEarnedXP(xp);
+      
+      completeLesson.mutate({ lessonId, xpEarned: xp }, {
+        onSuccess: () => {
+          setShowXPModal(true);
+        }
+      });
     } else {
       // Move to next question
-      setTimeout(() => {
-        setCurrentQuestionIndex(prev => prev + 1);
-      }, 2000);
+      setCurrentQuestionIndex(prev => prev + 1);
     }
   };
 
@@ -74,14 +79,11 @@ export default function Lesson() {
     const xp = 15;
     setEarnedXP(xp);
     
-    completeLesson.mutate(
-      { lessonId, xpEarned: xp },
-      {
-        onSuccess: () => {
-          setShowXPModal(true);
-        }
+    completeLesson.mutate({ lessonId, xpEarned: xp }, {
+      onSuccess: () => {
+        setShowXPModal(true);
       }
-    );
+    });
   };
 
   const handleCloseXPModal = () => {
@@ -176,6 +178,7 @@ export default function Lesson() {
               <QuizQuestion
                 question={questions[currentQuestionIndex]}
                 onAnswer={handleAnswer}
+                onContinue={handleQuizContinue}
               />
             )}
 

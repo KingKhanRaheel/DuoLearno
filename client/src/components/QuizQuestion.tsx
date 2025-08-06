@@ -8,6 +8,7 @@ import { soundManager } from "@/lib/sound";
 interface QuizQuestionProps {
   question: QuizQuestion;
   onAnswer: (isCorrect: boolean) => void;
+  onContinue?: () => void;
 }
 
 // Detailed tips and explanations for each question topic
@@ -195,7 +196,7 @@ const getDetailedTip = (question: string, correctAnswer: string) => {
   };
 };
 
-export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) {
+export default function QuizQuestion({ question, onAnswer, onContinue }: QuizQuestionProps) {
   const [selectedAnswer, setSelectedAnswer] = useState<number | null>(null);
   const [showFeedback, setShowFeedback] = useState(false);
   const [answered, setAnswered] = useState(false);
@@ -228,8 +229,12 @@ export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) 
   };
 
   const handleContinue = () => {
-    const isCorrect = selectedAnswer === question.correct;
-    onAnswer(isCorrect);
+    if (onContinue) {
+      onContinue();
+    } else {
+      const isCorrect = selectedAnswer === question.correct;
+      onAnswer(isCorrect);
+    }
   };
 
   const getPersonalizedTip = () => {
