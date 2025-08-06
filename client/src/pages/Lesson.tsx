@@ -24,7 +24,10 @@ export default function Lesson() {
 
   const { data: lesson } = useQuery({
     queryKey: ["lesson", lessonId],
-    queryFn: () => storage.getLesson(lessonId),
+    queryFn: async () => {
+      const response = await fetch(`/api/lessons/${lessonId}`);
+      return response.json();
+    },
     enabled: lessonId > 0,
   });
 
@@ -87,22 +90,42 @@ export default function Lesson() {
   };
 
   const navigateToNextLesson = async () => {
-    if (!lesson) return;
+    if (!lesson) {
+      console.log("No lesson data available");
+      goBack();
+      return;
+    }
     
     try {
+      console.log(`Getting lessons for course ${lesson.courseId}`);
+      
       // Get all lessons for this course
       const response = await fetch(`/api/courses/${lesson.courseId}/lessons`);
+      
+      if (!response.ok) {
+        throw new Error(`Failed to fetch lessons: ${response.status}`);
+      }
+      
       const courseLessons = await response.json();
+      console.log("Course lessons:", courseLessons);
+      console.log("Current lesson ID:", lessonId);
+      
+      // Sort lessons by orderIndex to ensure proper sequence
+      const sortedLessons = courseLessons.sort((a: any, b: any) => a.orderIndex - b.orderIndex);
       
       // Find current lesson index
-      const currentIndex = courseLessons.findIndex((l: any) => l.id === lessonId);
+      const currentIndex = sortedLessons.findIndex((l: any) => l.id === lessonId);
+      console.log("Current lesson index:", currentIndex);
+      console.log("Total lessons:", sortedLessons.length);
       
-      if (currentIndex >= 0 && currentIndex < courseLessons.length - 1) {
+      if (currentIndex >= 0 && currentIndex < sortedLessons.length - 1) {
         // Navigate to next lesson
-        const nextLesson = courseLessons[currentIndex + 1];
+        const nextLesson = sortedLessons[currentIndex + 1];
+        console.log("Navigating to next lesson:", nextLesson);
         navigate(`/lesson/${nextLesson.id}`);
       } else {
         // This was the last lesson, go back to course
+        console.log("Last lesson completed, returning to course");
         navigate(`/course/${lesson.courseId}`);
       }
     } catch (error) {
