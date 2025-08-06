@@ -116,7 +116,9 @@ export default function Home() {
           
           {courses.map((course: any, index: number) => {
             const completedLessons = userProgress.filter((p: any) => p.completed).length;
-            const progress = course.totalLessons > 0 ? (completedLessons / course.totalLessons) * 100 : 0;
+            const progress = isNaN(completedLessons) || isNaN(course.totalLessons) || course.totalLessons === 0 
+              ? 0 
+              : (completedLessons / course.totalLessons) * 100;
             
             return (
               <motion.div

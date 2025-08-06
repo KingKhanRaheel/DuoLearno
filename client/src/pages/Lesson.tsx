@@ -83,7 +83,32 @@ export default function Lesson() {
 
   const handleCloseXPModal = () => {
     setShowXPModal(false);
-    goBack();
+    navigateToNextLesson();
+  };
+
+  const navigateToNextLesson = async () => {
+    if (!lesson) return;
+    
+    try {
+      // Get all lessons for this course
+      const response = await fetch(`/api/courses/${lesson.courseId}/lessons`);
+      const courseLessons = await response.json();
+      
+      // Find current lesson index
+      const currentIndex = courseLessons.findIndex((l: any) => l.id === lessonId);
+      
+      if (currentIndex >= 0 && currentIndex < courseLessons.length - 1) {
+        // Navigate to next lesson
+        const nextLesson = courseLessons[currentIndex + 1];
+        navigate(`/lesson/${nextLesson.id}`);
+      } else {
+        // This was the last lesson, go back to course
+        navigate(`/course/${lesson.courseId}`);
+      }
+    } catch (error) {
+      console.error("Error finding next lesson:", error);
+      goBack();
+    }
   };
 
   if (!lesson) {
@@ -135,9 +160,9 @@ export default function Lesson() {
               <Button
                 onClick={handleCompleteLesson}
                 disabled={completeLesson.isPending}
-                className="w-full bg-duolingo-green text-white py-4 rounded-2xl font-bold text-lg hover:opacity-90 transition-all duration-200"
+                className="w-full bg-gradient-to-r from-green-500 to-green-600 text-white py-4 rounded-2xl font-bold text-lg hover:from-green-600 hover:to-green-700 transition-all duration-200 shadow-lg"
               >
-                {completeLesson.isPending ? "Completing..." : "Complete Lesson"}
+                {completeLesson.isPending ? "Completing..." : "Complete Lesson & Continue"}
               </Button>
             )}
           </div>

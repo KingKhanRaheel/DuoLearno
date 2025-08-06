@@ -301,103 +301,105 @@ export default function QuizQuestion({ question, onAnswer }: QuizQuestionProps) 
       <AnimatePresence>
         {showFeedback && (
           <motion.div
-            initial={{ opacity: 0, scale: 0.9 }}
-            animate={{ opacity: 1, scale: 1 }}
-            exit={{ opacity: 0, scale: 0.9 }}
-            className="absolute inset-0 bg-white/95 backdrop-blur-sm rounded-2xl p-6 z-10"
+            initial={{ opacity: 0 }}
+            animate={{ opacity: 1 }}
+            exit={{ opacity: 0 }}
+            className="fixed inset-0 bg-black/50 backdrop-blur-sm z-50 flex items-center justify-center p-4"
             style={{ backdropFilter: "blur(10px)" }}
           >
             <motion.div
-              initial={{ y: 30, opacity: 0 }}
-              animate={{ y: 0, opacity: 1 }}
-              transition={{ delay: 0.2 }}
-              className={`h-full flex flex-col justify-center ${
-                isCorrect ? "text-green-800" : "text-red-800"
-              }`}
+              initial={{ scale: 0.9, opacity: 0 }}
+              animate={{ scale: 1, opacity: 1 }}
+              exit={{ scale: 0.9, opacity: 0 }}
+              className="bg-white rounded-2xl w-full max-w-md max-h-[80vh] overflow-y-auto shadow-2xl"
             >
-              <div className="text-center mb-6">
-                <motion.div 
-                  className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
-                    isCorrect ? "bg-green-500" : "bg-red-500"
-                  }`}
-                  initial={{ scale: 0 }}
-                  animate={{ scale: 1 }}
-                  transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+              <div className="p-6">
+                <div className="text-center mb-6">
+                  <motion.div 
+                    className={`w-16 h-16 mx-auto mb-4 rounded-full flex items-center justify-center ${
+                      isCorrect ? "bg-green-500" : "bg-red-500"
+                    }`}
+                    initial={{ scale: 0 }}
+                    animate={{ scale: 1 }}
+                    transition={{ delay: 0.3, type: "spring", stiffness: 200 }}
+                  >
+                    {isCorrect ? (
+                      <Check className="w-8 h-8 text-white" />
+                    ) : (
+                      <X className="w-8 h-8 text-white" />
+                    )}
+                  </motion.div>
+                  
+                  <motion.h3 
+                    className={`text-2xl font-bold mb-2 ${
+                      isCorrect ? "text-green-800" : "text-red-800"
+                    }`}
+                    initial={{ opacity: 0 }}
+                    animate={{ opacity: 1 }}
+                    transition={{ delay: 0.4 }}
+                  >
+                    {isCorrect ? "Excellent!" : "Not quite right"}
+                  </motion.h3>
+                </div>
+
+                <motion.div
+                  initial={{ opacity: 0, y: 20 }}
+                  animate={{ opacity: 1, y: 0 }}
+                  transition={{ delay: 0.5 }}
+                  className="space-y-4 mb-6"
                 >
                   {isCorrect ? (
-                    <Check className="w-8 h-8 text-white" />
-                  ) : (
-                    <X className="w-8 h-8 text-white" />
-                  )}
-                </motion.div>
-                
-                <motion.h3 
-                  className={`text-2xl font-bold mb-2 ${
-                    isCorrect ? "text-green-800" : "text-red-800"
-                  }`}
-                  initial={{ opacity: 0 }}
-                  animate={{ opacity: 1 }}
-                  transition={{ delay: 0.4 }}
-                >
-                  {isCorrect ? "Excellent!" : "Not quite right"}
-                </motion.h3>
-              </div>
-
-              <motion.div
-                initial={{ opacity: 0, y: 20 }}
-                animate={{ opacity: 1, y: 0 }}
-                transition={{ delay: 0.5 }}
-                className="flex-1"
-              >
-                {isCorrect ? (
-                  <div className="space-y-4">
-                    <h4 className="text-xl font-bold text-green-800">
-                      {getPersonalizedTip().title}
-                    </h4>
-                    <p className="text-green-700 leading-relaxed text-base">
-                      {getPersonalizedTip().explanation}
-                    </p>
-                  </div>
-                ) : (
-                  <div className="space-y-4">
-                    <h4 className="text-xl font-bold text-red-800">
-                      Let's learn from this
-                    </h4>
-                    <p className="text-red-700 leading-relaxed text-base">
-                      The correct answer is <span className="font-semibold">"{question.options[question.correct]}"</span>. 
-                    </p>
-                    <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
-                      <h5 className="font-bold text-blue-800 mb-2">{getPersonalizedTip().title}</h5>
-                      <p className="text-blue-700 text-sm leading-relaxed">
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-bold text-green-800">
+                        {getPersonalizedTip().title}
+                      </h4>
+                      <p className="text-green-700 leading-relaxed text-base">
                         {getPersonalizedTip().explanation}
                       </p>
                     </div>
-                  </div>
-                )}
-              </motion.div>
+                  ) : (
+                    <div className="space-y-4">
+                      <h4 className="text-xl font-bold text-red-800">
+                        Let's learn from this
+                      </h4>
+                      <p className="text-red-700 leading-relaxed text-base">
+                        The correct answer is <span className="font-semibold">"{question.options[question.correct]}"</span>. 
+                      </p>
+                      <div className="bg-blue-50 border border-blue-200 rounded-lg p-4">
+                        <h5 className="font-bold text-blue-800 mb-2">{getPersonalizedTip().title}</h5>
+                        <p className="text-blue-700 text-sm leading-relaxed">
+                          {getPersonalizedTip().explanation}
+                        </p>
+                      </div>
+                    </div>
+                  )}
+                </motion.div>
+
+                {/* Continue button inside the modal */}
+                <AnimatePresence>
+                  {showContinueButton && (
+                    <motion.div
+                      initial={{ opacity: 0, y: 20 }}
+                      animate={{ opacity: 1, y: 0 }}
+                      exit={{ opacity: 0, y: -20 }}
+                    >
+                      <Button
+                        onClick={handleContinue}
+                        className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white py-4 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
+                      >
+                        Continue
+                        <ArrowRight className="w-5 h-5" />
+                      </Button>
+                    </motion.div>
+                  )}
+                </AnimatePresence>
+              </div>
             </motion.div>
           </motion.div>
         )}
       </AnimatePresence>
 
-      <AnimatePresence>
-        {showContinueButton && showFeedback && (
-          <motion.div
-            initial={{ opacity: 0 }}
-            animate={{ opacity: 1 }}
-            exit={{ opacity: 0 }}
-            className="absolute bottom-6 left-6 right-6 z-20"
-          >
-            <Button
-              onClick={handleContinue}
-              className="w-full bg-gradient-to-r from-purple-500 to-blue-500 hover:from-purple-600 hover:to-blue-600 text-white py-4 rounded-xl font-bold text-lg transition-all duration-200 flex items-center justify-center gap-2 shadow-lg"
-            >
-              Continue
-              <ArrowRight className="w-5 h-5" />
-            </Button>
-          </motion.div>
-        )}
-      </AnimatePresence>
+
     </motion.div>
   );
 }
