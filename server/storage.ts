@@ -406,6 +406,9 @@ async function initializeDatabase() {
     return; // Database already initialized
   }
 
+  // Import course data
+  const { personalFinanceCourse } = await import("./course-data.js");
+
   // Create demo user
   const [demoUser] = await db
     .insert(users)
@@ -419,78 +422,35 @@ async function initializeDatabase() {
     })
     .returning();
 
-  // Create courses
+  // Create Personal Finance course
   const [financeCourse] = await db
     .insert(courses)
     .values({
-      title: "Personal Finance 101",
-      description: "Learn budgeting, saving, and smart money management in bite-sized lessons.",
-      icon: "fas fa-piggy-bank",
-      color: "duolingo-green",
-      totalLessons: 3
+      title: personalFinanceCourse.title,
+      description: personalFinanceCourse.description,
+      icon: personalFinanceCourse.icon,
+      color: personalFinanceCourse.color,
+      totalLessons: personalFinanceCourse.totalLessons
     })
     .returning();
 
-  const [designCourse] = await db
-    .insert(courses)
-    .values({
-      title: "Design Basics",
-      description: "Master fundamental design principles, color theory, and visual hierarchy.",
-      icon: "fas fa-palette",
-      color: "duolingo-blue",
-      totalLessons: 1
-    })
-    .returning();
-
-  // Create lessons
-  await db.insert(lessons).values([
-    {
-      courseId: financeCourse.id,
-      title: "What is a Budget?",
-      content: "A budget is a plan for how you'll spend your money. It helps you track your income and expenses so you can make smart financial decisions and reach your goals.",
-      orderIndex: 0,
-      questions: [{
-        question: "What is the main purpose of a budget?",
-        options: ["To restrict spending", "To track income and expenses", "To invest money"],
-        correct: 1
-      }]
-    },
-    {
-      courseId: financeCourse.id,
-      title: "Income vs. Expenses",
-      content: "Income is money you earn from work, investments, or other sources. Expenses are money you spend on things like rent, food, and entertainment. The goal is to have more income than expenses.",
-      orderIndex: 1,
-      questions: [{
-        question: "Which should be higher for good financial health?",
-        options: ["Expenses", "Income", "They should be equal"],
-        correct: 1
-      }]
-    },
-    {
-      courseId: financeCourse.id,
-      title: "What is the 50-30-20 Rule?",
-      content: "The 50-30-20 rule is a simple budgeting method that divides your after-tax income into three categories: 50% for needs (rent, groceries, utilities), 30% for wants (dining out, entertainment), and 20% for savings and debt repayment.",
-      orderIndex: 2,
-      questions: [{
-        question: "According to the 50-30-20 rule, what percentage should go to savings?",
-        options: ["30%", "20%", "50%"],
-        correct: 1
-      }]
-    },
-    {
-      courseId: designCourse.id,
-      title: "What is Visual Hierarchy?",
-      content: "Visual hierarchy is the arrangement of elements to show their order of importance. It guides the viewer's eye through your design using size, color, contrast, and spacing.",
-      orderIndex: 0,
-      questions: [{
-        question: "What is the main purpose of visual hierarchy?",
-        options: ["To make things pretty", "To guide the viewer's eye", "To use more colors"],
-        correct: 1
-      }]
+  // Create all lessons from the course data
+  const allLessons = [];
+  for (const chapter of personalFinanceCourse.chapters) {
+    for (const lesson of chapter.lessons) {
+      allLessons.push({
+        courseId: financeCourse.id,
+        title: lesson.title,
+        content: lesson.content,
+        orderIndex: lesson.orderIndex,
+        questions: lesson.questions
+      });
     }
-  ]);
+  }
 
-  console.log("Database initialized with sample data");
+  await db.insert(lessons).values(allLessons);
+
+  console.log("Database initialized with Personal Finance 101 course data");
 }
 
 // Initialize database on startup

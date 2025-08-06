@@ -3,7 +3,7 @@ import { queryClient } from "./lib/queryClient";
 import { QueryClientProvider } from "@tanstack/react-query";
 import { Toaster } from "@/components/ui/toaster";
 import { TooltipProvider } from "@/components/ui/tooltip";
-import HomePage from "@/pages/HomePage";
+import Home from "@/pages/Home";
 import Courses from "@/pages/Courses";
 import Profile from "@/pages/Profile";
 import Course from "@/pages/Course";
@@ -17,7 +17,7 @@ function Router() {
     <div className="relative">
       <FloatingStats />
       <Switch>
-        <Route path="/" component={HomePage} />
+        <Route path="/" component={Home} />
         <Route path="/courses" component={Courses} />
         <Route path="/profile" component={Profile} />
         <Route path="/course/:id" component={Course} />
